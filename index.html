@@ -28,7 +28,7 @@
 
 ```
 /* HEADER */
-header{background:linear-gradient(135deg,#040d1a,#0a1628 50%,#0f2040) !important;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(4,13,26,.4);color:#fff;}
+#site-header{background:#040d1a !important;border-bottom:1px solid rgba(255,255,255,.06) !important;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(4,13,26,.4) !important;color:#fff !important;}
 .header-inner{max-width:1400px;margin:0 auto;padding:0 20px;}
 .header-top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;gap:16px;}
 .header-brand{display:flex;align-items:center;gap:12px;}
@@ -236,13 +236,18 @@ canvas{border-radius:var(--radius-md);background:transparent;flex-shrink:0;}
 .macro-fetch-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;}
 .macro-status{font-size:11px;color:rgba(184,208,240,.6);}
 /* ANALYTICS MODELS PANEL */
+.ap-toggle{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--gold-300);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;font-family:inherit;padding:0;}
+.ap-toggle:hover{color:var(--gold-200);}
+.ap-toggle-arrow{font-size:12px;transition:transform .2s;}
+.ap-toggle-arrow.open{transform:rotate(180deg);}
+/* ANALYTICS MODELS PANEL ORIG */
 .analytics-panel{background:linear-gradient(160deg,#0a1628,#0f2040);border-radius:var(--radius-xl);padding:20px;margin-bottom:16px;border:1px solid rgba(255,255,255,.08);}
 .analytics-panel .ap-title{font-size:11px;font-weight:700;color:var(--gold-300);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
 .analytics-panel .ap-sub{font-size:11px;color:rgba(184,208,240,.5);margin-bottom:16px;}
 .analytics-fetch-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
 .analytics-status{font-size:11px;color:rgba(184,208,240,.5);}
 #analytics_results{max-height:500px;overflow-y:auto;scrollbar-width:thin;}
-@media print{header{position:static;}.action-bar,.watermark,.pdf-fab{display:none;}body{padding-bottom:0;}.card{box-shadow:none;}}
+@media print{#site-header{position:static !important;}.action-bar,.watermark,.pdf-fab{display:none;}body{padding-bottom:0;}.card{box-shadow:none;}}
 @media(max-width:700px){.g3{grid-template-columns:1fr 1fr;}.g4{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}}
 ```
 
@@ -250,7 +255,7 @@ canvas{border-radius:var(--radius-md);background:transparent;flex-shrink:0;}
 </head>
 <body>
 
-<header>
+<div role="banner" id="site-header" style="background:#040d1a;background:linear-gradient(135deg,#040d1a 0%,#0a1628 50%,#0f2040 100%);border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(4,13,26,.4);">
   <div class="header-inner">
     <div class="header-top">
       <div class="header-brand">
@@ -265,8 +270,8 @@ canvas{border-radius:var(--radius-md);background:transparent;flex-shrink:0;}
           </svg>
         </div>
         <div class="brand-text">
-          <h1>PB Allocation Engine</h1>
-          <div class="sub" id="hdr_sub">Spot + Forward yaklaşımı ile vade sonu kurlar → giriş PB'ye dönüşte Net P/L.</div>
+          <h1 style="color:#ffffff;font-size:15px;font-weight:700;">PB Allocation Engine</h1>
+          <div class="sub" id="hdr_sub" style="color:#7fa8e0;">Spot + Forward yaklaşımı ile vade sonu kurlar → giriş PB'ye dönüşte Net P/L.</div>
         </div>
       </div>
       <div class="header-right">
@@ -278,76 +283,88 @@ canvas{border-radius:var(--radius-md);background:transparent;flex-shrink:0;}
       </div>
     </div>
     <div class="disclaimer-bar">
-      <p id="hdr_disc">Bu hesaplamalar yaklaşık değerlerdir. Kullanılan kurlar, stopaj oranları ve ürün getirileri varsayımsaldır; nihai sonuçlar bankanın resmi fiyatlaması/işlem anındaki koşullara göre değişebilir.</p>
+      <p id="hdr_disc" style="color:rgba(184,208,240,.6);">Bu hesaplamalar yaklaşık değerlerdir. Kullanılan kurlar, stopaj oranları ve ürün getirileri varsayımsaldır; nihai sonuçlar bankanın resmi fiyatlaması/işlem anındaki koşullara göre değişebilir.</p>
     </div>
   </div>
-</header>
+</div><!-- /site-header -->
 
 <div class="wrap">
 
-  <!-- MACRO INTELLIGENCE PANEL -->
+  <!-- MACRO INTELLIGENCE PANEL (collapsible) -->
 
   <div class="macro-panel" id="macroPanel">
-    <div class="mp-title">🧠 Macro Intelligence — Piyasa Sinyalleri</div>
-    <div class="macro-grid">
-      <div class="macro-card neutral" id="mc_policy">
-        <div class="mc-label">MB Politika Faizi</div>
-        <div class="mc-value" id="mc_policy_val">—</div>
-        <div class="mc-sub">%/yıl</div>
+    <button class="ap-toggle" onclick="toggleMacro()" style="width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--gold-300);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;font-family:inherit;padding:0;">
+      <span>🧠 Macro Intelligence — Piyasa Sinyalleri</span>
+      <span id="macro_arrow" style="font-size:12px;transition:transform .2s;">▼</span>
+    </button>
+    <div id="macro_body" style="display:none;margin-top:14px;">
+      <div style="font-size:11px;color:rgba(184,208,240,.5);margin-bottom:12px;">
+        Politika faizi ve TÜFE verilerini <strong style="color:rgba(184,208,240,.8);">manuel gir</strong> — API kısıtlaması nedeniyle otomatik çekilemiyor. Carry spreadi ve FX outlook otomatik hesaplanır.
       </div>
-      <div class="macro-card neutral" id="mc_cpi">
-        <div class="mc-label">Son TÜFE (yıllık)</div>
-        <div class="mc-value" id="mc_cpi_val">—</div>
-        <div class="mc-sub">%/yıl</div>
+      <div class="macro-grid">
+        <div class="macro-card neutral" id="mc_policy">
+          <div class="mc-label">MB Politika Faizi</div>
+          <div class="mc-value" id="mc_policy_val">—</div>
+          <div class="mc-sub">%/yıl</div>
+        </div>
+        <div class="macro-card neutral" id="mc_cpi">
+          <div class="mc-label">Son TÜFE (yıllık)</div>
+          <div class="mc-value" id="mc_cpi_val">—</div>
+          <div class="mc-sub">%/yıl</div>
+        </div>
+        <div class="macro-card neutral" id="mc_real">
+          <div class="mc-label">Reel Faiz</div>
+          <div class="mc-value" id="mc_real_val">—</div>
+          <div class="mc-sub">Politika − TÜFE</div>
+        </div>
+        <div class="macro-card neutral" id="mc_consensus">
+          <div class="mc-label">Yılsonu USD/TRY Beklenti</div>
+          <div class="mc-value" id="mc_consensus_val">—</div>
+          <div class="mc-sub">Piyasa tahmini</div>
+        </div>
       </div>
-      <div class="macro-card neutral" id="mc_real">
-        <div class="mc-label">Reel Faiz</div>
-        <div class="mc-value" id="mc_real_val">—</div>
-        <div class="mc-sub">Politika − TÜFE</div>
+      <div class="macro-inputs">
+        <div class="macro-input-group">
+          <label>MB Politika Faizi (%)</label>
+          <input type="number" id="macro_policy" step="0.25" placeholder="ör. 42.5" />
+        </div>
+        <div class="macro-input-group">
+          <label>Son TÜFE (%)</label>
+          <input type="number" id="macro_cpi" step="0.1" placeholder="ör. 65.4" />
+        </div>
+        <div class="macro-input-group">
+          <label>Yılsonu USD/TRY Tahmini</label>
+          <input type="number" id="macro_consensus_fx" step="0.1" placeholder="ör. 42.0" />
+        </div>
+        <div class="macro-input-group">
+          <label>USD/TRY 12M Forward (opt.)</label>
+          <input type="number" id="macro_fwd12" step="0.01" placeholder="oto: carry'dan" />
+        </div>
       </div>
-      <div class="macro-card neutral" id="mc_consensus">
-        <div class="mc-label">Yılsonu USD/TRY Beklenti</div>
-        <div class="mc-value" id="mc_consensus_val">—</div>
-        <div class="mc-sub">Piyasa tahmini</div>
+      <div class="macro-fetch-row" style="margin-top:12px;">
+        <button class="btn btn-ghost btn-sm" id="btn_macro_calc">📊 Sinyal Hesapla</button>
+        <span class="macro-status" id="macro_status"></span>
       </div>
+      <div class="macro-signal" id="macro_signal" style="display:none;"></div>
     </div>
-    <div class="macro-inputs">
-      <div class="macro-input-group">
-        <label>MB Politika Faizi (%)</label>
-        <input type="number" id="macro_policy" step="0.25" placeholder="ör. 42.5" />
-      </div>
-      <div class="macro-input-group">
-        <label>Son TÜFE (%)</label>
-        <input type="number" id="macro_cpi" step="0.1" placeholder="ör. 65.4" />
-      </div>
-      <div class="macro-input-group">
-        <label>Yılsonu USD/TRY Tahmini</label>
-        <input type="number" id="macro_consensus_fx" step="0.1" placeholder="ör. 42.0" />
-      </div>
-      <div class="macro-input-group">
-        <label>USD/TRY 12M Forward (opt.)</label>
-        <input type="number" id="macro_fwd12" step="0.01" placeholder="oto: carry'dan" />
-      </div>
-    </div>
-    <div class="macro-fetch-row">
-      <button class="btn btn-gold btn-sm" id="btn_macro_fetch">🌐 Makro Verileri Çek</button>
-      <button class="btn btn-ghost btn-sm" id="btn_macro_calc">📊 Sinyal Hesapla</button>
-      <span class="macro-status" id="macro_status"></span>
-    </div>
-    <div class="macro-signal" id="macro_signal" style="display:none;"></div>
   </div>
 
-  <!-- ANALYTICS MODELS PANEL -->
+  <!-- ANALYTICS MODELS PANEL (collapsible) -->
 
   <div class="analytics-panel">
-    <div class="ap-title">🔬 Analitik Modeller — Tarihsel Veri Sinyalleri</div>
-    <div class="ap-sub">Altın momentum · TRY volatilite · Carry/Vol oranı · Korelasyon kırılması · 1 yıllık veri</div>
-    <div class="analytics-fetch-row">
-      <button class="btn btn-gold btn-sm" id="btn_fetch_analytics">📡 Tarihsel Veri Çek (1 Yıl)</button>
-      <button class="btn btn-ghost btn-sm" id="btn_run_models">⚡ Modelleri Çalıştır</button>
-      <span class="analytics-status" id="analytics_status">Veriler henüz çekilmedi</span>
+    <button class="ap-toggle" id="btn_analytics_toggle" onclick="toggleAnalytics()">
+      <span>🔬 Analitik Modeller — Tarihsel Veri Sinyalleri</span>
+      <span class="ap-toggle-arrow" id="analytics_arrow">▼</span>
+    </button>
+    <div id="analytics_body" style="display:none;margin-top:14px;">
+      <div class="ap-sub">USD/TRY 1 yıllık tarihsel veri ile: Altın momentum · TRY volatilite · Carry/Vol Sharpe · Korelasyon kırılması</div>
+      <div class="analytics-fetch-row">
+        <button class="btn btn-gold btn-sm" id="btn_fetch_analytics">📡 Veri Çek (1 Yıl)</button>
+        <button class="btn btn-ghost btn-sm" id="btn_run_models">⚡ Modelleri Çalıştır</button>
+        <span class="analytics-status" id="analytics_status">Henüz çekilmedi</span>
+      </div>
+      <div id="analytics_results"></div>
     </div>
-    <div id="analytics_results"></div>
   </div>
 
   <!-- CONFIG CARD -->
@@ -974,12 +991,20 @@ function fvRenewWithTax(P, annualPct, totalDays, renewEveryDays, taxPct){
 }
 
 function suggestTaxPct(prod, targetCcy, days){
+  // TERM (Vadeli Mevduat): stopaj uygulanır
   if(prod==='TERM'){
-    if(targetCcy!=='TL') return 25;
-    if(days<=183) return 17.5;
-    if(days<=365) return 15;
-    return 10;
+    if(targetCcy!=='TL') return 25;   // dövizli vadeli
+    if(days<=183) return 17.5;        // TL ≤183 gün
+    if(days<=365) return 15;          // TL ≤365 gün
+    return 10;                         // TL >365 gün
   }
+  // SUKUK: Hazine sukuku stopaj var ama banka sukukları farklı → 0 varsayım
+  if(prod==='SUKUK') return 0;
+  // FUND (Yatırım Fonu): stopaj yok, fon bünyesinde vergi
+  if(prod==='FUND') return 0;
+  // DPM (Ayrılmış Portföy): stopaj yok
+  if(prod==='DPM') return 0;
+  // Diğer: 0
   return 0;
 }
 
@@ -1842,6 +1867,24 @@ function calc(){
     }
   });
 
+  // FX Cross-currency note: warn when giriş PB ≠ hedef PB and negative cross P/L is expected
+  {
+    const noteEl = document.getElementById('txt_pl_note');
+    if(noteEl){
+      const hasCross = (principalCcy !== reportCcy);
+      const hasNegCross = (pUSD != null && pUSD < 0 && principalCcy !== 'USD') ||
+                          (pEUR != null && pEUR < 0 && principalCcy !== 'EUR') ||
+                          (pTL  != null && pTL  < 0 && principalCcy !== 'TL');
+      if(hasCross && hasNegCross){
+        const warn = L()==='en'
+          ? 'ℹ️ Cross-currency P/L: When entry currency ≠ target currency, P/L in other currencies may show negative even with real gains — this reflects FX conversion math, not a loss in the product currency.'
+          : 'ℹ️ Çapraz kur P/L: Giriş PB ile hedef PB farklı olduğunda, diğer para birimlerindeki P/L negatif görünebilir — bu ürün bazında zarar değil, kur çevirimi farkıdır.';
+        noteEl.textContent = warn;
+        noteEl.style.color = 'var(--text-secondary)';
+      }
+    }
+  }
+
   const prodName=I18N[L()].prod;
   const badgeEl=document.getElementById('risk_badges');
   const entries=Object.keys(byKeyStartReport).map(k=>({k,v:byKeyStartReport[k]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
@@ -2364,7 +2407,7 @@ function calcMacroSignal(){
 const _originalSuggestBestScenario = suggestBestScenario;
 
 // Wire macro buttons
-document.getElementById('btn_macro_fetch').addEventListener('click', fetchMacroData);
+// btn_macro_fetch removed — TCMB API not publicly accessible
 document.getElementById('btn_macro_calc').addEventListener('click', calcMacroSignal);
 document.getElementById('macro_policy').addEventListener('input', updateMacroCards);
 document.getElementById('macro_cpi').addEventListener('input', updateMacroCards);
@@ -2825,6 +2868,24 @@ function suggestBestScenario(){
 // Wire analytics buttons
 document.getElementById('btn_fetch_analytics')?.addEventListener('click', fetchHistoricalData);
 document.getElementById('btn_run_models')?.addEventListener('click', runAllModels);
+
+function toggleAnalytics(){
+  const body = document.getElementById('analytics_body');
+  const arrow = document.getElementById('analytics_arrow');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  arrow.classList.toggle('open', !isOpen);
+}
+
+// Also do same for macro panel — make it collapsible
+function toggleMacro(){
+  const body = document.getElementById('macro_body');
+  const arrow = document.getElementById('macro_arrow');
+  if(!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(arrow) arrow.classList.toggle('open', !isOpen);
+}
 </script>
 
 </body></html>
